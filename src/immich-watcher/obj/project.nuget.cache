@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "qgzTiB9I4Zqz/0f7CIt7bFs8bX+ddImCjq/z7NYJL64c+2HLXPb2Q7qDIZOAl4trGQBqnO3RwN0/5yhosK4Ybw==",
+  "success": true,
+  "projectFilePath": "/Users/francis.marasigan/projects/siganberg/immich-watcher/src/immich-watcher/immich-watcher.csproj",
+  "expectedPackageFiles": [
+    "/Users/francis.marasigan/.nuget/packages/cliwrap/3.6.6/cliwrap.3.6.6.nupkg.sha512",
+    "/Users/francis.marasigan/.nuget/packages/serilog/2.10.0/serilog.2.10.0.nupkg.sha512",
+    "/Users/francis.marasigan/.nuget/packages/serilog.sinks.console/4.1.0/serilog.sinks.console.4.1.0.nupkg.sha512"
+  ],
+  "logs": []
+}

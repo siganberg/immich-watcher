@@ -1,0 +1,188 @@
+{
+  "version": 3,
+  "targets": {
+    "net8.0": {
+      "CliWrap/3.6.6": {
+        "type": "package",
+        "compile": {
+          "lib/netcoreapp3.0/CliWrap.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netcoreapp3.0/CliWrap.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Serilog/2.10.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.1/Serilog.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.1/Serilog.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Serilog.Sinks.Console/4.1.0": {
+        "type": "package",
+        "dependencies": {
+          "Serilog": "2.10.0"
+        },
+        "compile": {
+          "lib/net5.0/Serilog.Sinks.Console.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net5.0/Serilog.Sinks.Console.dll": {
+            "related": ".xml"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "CliWrap/3.6.6": {
+      "sha512": "8/WnYKDjXjqMp9ktCygmeC6kDsmSEKF4riEYNy98+nD3wOKbuxqOjmhiFMalOYlM+mUqfs3SOEowF20+loDZHQ==",
+      "type": "package",
+      "path": "cliwrap/3.6.6",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "cliwrap.3.6.6.nupkg.sha512",
+        "cliwrap.nuspec",
+        "favicon.png",
+        "lib/net462/CliWrap.dll",
+        "lib/net462/CliWrap.xml",
+        "lib/netcoreapp3.0/CliWrap.dll",
+        "lib/netcoreapp3.0/CliWrap.xml",
+        "lib/netstandard2.0/CliWrap.dll",
+        "lib/netstandard2.0/CliWrap.xml",
+        "lib/netstandard2.1/CliWrap.dll",
+        "lib/netstandard2.1/CliWrap.xml"
+      ]
+    },
+    "Serilog/2.10.0": {
+      "sha512": "+QX0hmf37a0/OZLxM3wL7V6/ADvC1XihXN4Kq/p6d8lCPfgkRdiuhbWlMaFjR9Av0dy5F0+MBeDmDdRZN/YwQA==",
+      "type": "package",
+      "path": "serilog/2.10.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "icon.png",
+        "lib/net45/Serilog.dll",
+        "lib/net45/Serilog.xml",
+        "lib/net46/Serilog.dll",
+        "lib/net46/Serilog.xml",
+        "lib/netstandard1.0/Serilog.dll",
+        "lib/netstandard1.0/Serilog.xml",
+        "lib/netstandard1.3/Serilog.dll",
+        "lib/netstandard1.3/Serilog.xml",
+        "lib/netstandard2.0/Serilog.dll",
+        "lib/netstandard2.0/Serilog.xml",
+        "lib/netstandard2.1/Serilog.dll",
+        "lib/netstandard2.1/Serilog.xml",
+        "serilog.2.10.0.nupkg.sha512",
+        "serilog.nuspec"
+      ]
+    },
+    "Serilog.Sinks.Console/4.1.0": {
+      "sha512": "K6N5q+5fetjnJPvCmkWOpJ/V8IEIoMIB1s86OzBrbxwTyHxdx3pmz4H+8+O/Dc/ftUX12DM1aynx/dDowkwzqg==",
+      "type": "package",
+      "path": "serilog.sinks.console/4.1.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "icon.png",
+        "lib/net45/Serilog.Sinks.Console.dll",
+        "lib/net45/Serilog.Sinks.Console.xml",
+        "lib/net5.0/Serilog.Sinks.Console.dll",
+        "lib/net5.0/Serilog.Sinks.Console.xml",
+        "lib/netstandard1.3/Serilog.Sinks.Console.dll",
+        "lib/netstandard1.3/Serilog.Sinks.Console.xml",
+        "lib/netstandard2.0/Serilog.Sinks.Console.dll",
+        "lib/netstandard2.0/Serilog.Sinks.Console.xml",
+        "serilog.sinks.console.4.1.0.nupkg.sha512",
+        "serilog.sinks.console.nuspec"
+      ]
+    }
+  },
+  "projectFileDependencyGroups": {
+    "net8.0": [
+      "CliWrap >= 3.6.6",
+      "Serilog.Sinks.Console >= 4.1.0"
+    ]
+  },
+  "packageFolders": {
+    "/Users/francis.marasigan/.nuget/packages/": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "/Users/francis.marasigan/projects/siganberg/immich-watcher/src/immich-watcher/immich-watcher.csproj",
+      "projectName": "immich-watcher",
+      "projectPath": "/Users/francis.marasigan/projects/siganberg/immich-watcher/src/immich-watcher/immich-watcher.csproj",
+      "packagesPath": "/Users/francis.marasigan/.nuget/packages/",
+      "outputPath": "/Users/francis.marasigan/projects/siganberg/immich-watcher/src/immich-watcher/obj/",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "/Users/francis.marasigan/.nuget/NuGet/NuGet.Config"
+      ],
+      "originalTargetFrameworks": [
+        "net8.0"
+      ],
+      "sources": {
+        "https://api.nuget.org/v3/index.json": {},
+        "https://iherb.jfrog.io/iherb/api/nuget/nuget": {}
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "projectReferences": {}
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      }
+    },
+    "frameworks": {
+      "net8.0": {
+        "targetAlias": "net8.0",
+        "dependencies": {
+          "CliWrap": {
+            "target": "Package",
+            "version": "[3.6.6, )"
+          },
+          "Serilog.Sinks.Console": {
+            "target": "Package",
+            "version": "[4.1.0, )"
+          }
+        },
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48",
+          "net481"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.100/PortableRuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}
