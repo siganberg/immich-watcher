@@ -1,0 +1,12 @@
+name: immich-wather
+
+services:
+  server:
+    image: ghcr.io/siganberg/immich-watcher:eee037c
+    container_name: immich_wather
+    environment:
+      - IMMICH_HOST=${IMMICH_HOST}
+      - IMMICH_API_KEY=${IMMICH_API_KEY}
+    restart: always
+    volumes:
+      - ~/Users/francis.marasigan/immich-watcher:/data
