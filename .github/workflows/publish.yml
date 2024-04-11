@@ -20,7 +20,7 @@ jobs:
         
       - name: Build, tag, and push image 
         env:
-          REGISTRY: https://ghcr.io
+          REGISTRY: ghcr.io
           SERVICE_NAME: siganberg/immich-watcher
           IMAGE_TAG: ${{ steps.hashtag.outputs.short }}
           REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
