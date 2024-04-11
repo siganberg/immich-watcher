@@ -5,8 +5,7 @@ using Serilog;
 
 
 var sourcePath = "/var/lib/data";
-var host =  Environment.GetEnvironmentVariable("IMMICH_HOST");
-var apiKey = Environment.GetEnvironmentVariable("IMMICH_API_KEY");
+
 var extensionFiles = new[] { ".jpg", ".mp4" };
 
 Log.Logger = new LoggerConfiguration()
@@ -19,19 +18,6 @@ if (!Directory.Exists(sourcePath))
     return;
 }
 
-if (string.IsNullOrWhiteSpace(host))
-{
-    Log.Information("IMMICH_HOST is missing. Terminating");
-    return;
-}
-
-if (string.IsNullOrWhiteSpace(apiKey))
-{
-    Log.Information("IMMICH_API_KEY is missing. Terminating");
-    return;
-}
-
-
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .CreateLogger();
@@ -39,13 +25,26 @@ Log.Logger = new LoggerConfiguration()
 CreateFolder(Path.Combine(sourcePath, "pending"));
 CreateFolder(Path.Combine(sourcePath, "uploaded"));
 
-Log.Information("Started monitoring sources: {Source} folder monitoring started. Press Ctrl+C to exit.", sourcePath);
+Log.Information("Started monitoring source: {Source} folder.", sourcePath);
 
-LoginToImmich(host, apiKey);
+try
+{
+
+}
+catch (Exception e)
+{
+    Console.WriteLine(e);
+    throw;
+}
+
+var loginSuccess = LoginToImmich();
 
 while (true)
 {
-    StartTransferringFiles(sourcePath);
+    if (loginSuccess)
+    {
+        StartTransferringFiles(sourcePath);
+    }
     Thread.Sleep(1000);
 }
 
@@ -65,7 +64,7 @@ void StartTransferringFiles(string source)
 
 
         var stdOutBuffer = new StringBuilder();
-        
+
         foreach (var f in files)
         {
             if (!fileDetectedMessage)
@@ -83,40 +82,66 @@ void StartTransferringFiles(string source)
                 .Task
                 .Result;
 
-            foreach(var l in stdOutBuffer.ToString().Split(Environment.NewLine))
-            {
-                if (string.IsNullOrWhiteSpace(l)) continue;
-                if (l.Contains("Crawling")) continue;
-                if (l.Contains("All")) continue;
-                if (l.Contains("1 duplicate"))
-                    Log.Information("File {0} already exist. Skipping.", f);
-                if (l.Contains("Successfully")) 
-                    Log.Information(l.Replace("1", f));
-            }
+            OutputMessage(stdOutBuffer, f);
+            
             File.Move(f, f.Replace("pending", "uploaded"), true);
         }
-
-        if (fileDetectedMessage)
-        {
-            Log.Information("Transfer complete for source {Source}.", source);
-        }
     }
-    catch (DirectoryNotFoundException)
+    catch (Exception e)
     {
+        Log.Error(e, e.Message);
     }
 }
 
-void LoginToImmich(string host, string apiKey)
+bool LoginToImmich()
 {
-    _ = Cli.Wrap("immich")
-        .WithArguments($"login {host}/api {apiKey}")
-        .ExecuteBufferedAsync()
-        .Task
-        .Result;
+    try
+    {
+        var host =  Environment.GetEnvironmentVariable("IMMICH_HOST");
+        var apiKey = Environment.GetEnvironmentVariable("IMMICH_API_KEY");
+        
+        if (string.IsNullOrWhiteSpace(host))
+        {
+            Log.Information("IMMICH_HOST is missing. Please fixed the problem and restart the container.");
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(apiKey))
+        {
+            Log.Information("IMMICH_API_KEY is missing. Please fixed the problem and restart the container.");
+            return false;
+        }
+        
+        _ = Cli.Wrap("immich")
+            .WithArguments($"login {host}/api {apiKey}")
+            .ExecuteBufferedAsync()
+            .Task
+            .Result;
+        
+        Log.Information("Login to Immich Server: {0} successful.", host);
+
+        return true; 
+    }
+    catch (Exception e)
+    {
+        Log.Error(e, e.Message);
+    }
+    return false; 
 }
 
 void CreateFolder(string path)
 {
     if (!Directory.Exists(path))
         Directory.CreateDirectory(path);
+}
+
+void OutputMessage(StringBuilder stringBuilder, string s)
+{
+    foreach (var l in stringBuilder.ToString().Split(Environment.NewLine))
+    {
+        if (l.Contains("1 duplicate"))
+            Log.Information("File {0} already exist. Skipping.", s);
+        if (l.Contains("Successfully"))
+            Log.Information(l.Replace("1", s));
+    }
 }

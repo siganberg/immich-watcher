@@ -2,11 +2,11 @@ name: immich-wather
 
 services:
   server:
-    image: ghcr.io/siganberg/immich-watcher:64e9a56
+    image: immich-watcher:dev 
     container_name: immich_wather
     environment:
       - IMMICH_HOST=https://photos.marasigan.net
       - IMMICH_API_KEY=${IMMICH_API_KEY}
     restart: always
     volumes:
-      - ~/Users/francis.marasigan/immich-watcher:/data
+      - /Users/francis.marasigan/immich-watcher:/var/lib/data
