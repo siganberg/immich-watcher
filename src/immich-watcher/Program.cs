@@ -4,7 +4,7 @@ using CliWrap.Buffered;
 using Serilog;
 
 var sourcePath = Environment.GetEnvironmentVariable("/data");
-var host =  Environment.GetEnvironmentVariable("");
+var host =  Environment.GetEnvironmentVariable("IMMICH_HOST");
 var apiKey = Environment.GetEnvironmentVariable("IMMICH_API_KEY");
 
 var extensionFiles = new[] { ".jpg", ".mp4" };
