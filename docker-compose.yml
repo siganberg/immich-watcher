@@ -5,7 +5,7 @@ services:
     image: immich-watcher:dev 
     container_name: immich_wather
     environment:
-      - IMMICH_HOST=https://photos.marasigan.net
+      - IMMICH_HOST=${IMMICH_HOST}
       - IMMICH_API_KEY=${IMMICH_API_KEY}
     restart: always
     volumes:
