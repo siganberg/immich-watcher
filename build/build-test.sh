@@ -1,4 +1,4 @@
-rm -rf test_results
+# rm -rf test_results
 
 dotnet build src/  -c Release
 
@@ -14,4 +14,4 @@ dotnet build src/  -c Release
 #  --verbosity normal 
   
 # delete duplicate coverage
-rm -rf test_results/**$(date +'%Y')**
+#rm -rf test_results/**$(date +'%Y')**
