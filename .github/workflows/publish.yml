@@ -28,4 +28,4 @@ jobs:
         run: |
           echo "$REGISTRY_PASSWORD" | docker login --username $REGISTRY_USERNAME --password-stdin $REGISTRY
           docker buildx create --use
-          docker buildx build -f src/immich-watcher/Dockerfile . --platform linux/amd64,linux/arm64 -t $SERVICE_NAME:$IMAGE_TAG --push --provenance=false        
+          docker buildx build -f src/immich-watcher/Dockerfile ./src --platform linux/amd64,linux/arm64 -t $SERVICE_NAME:$IMAGE_TAG --push --provenance=false        

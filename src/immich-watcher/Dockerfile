@@ -8,14 +8,13 @@ WORKDIR /app
 
 # Build immich watcher
 FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-
 ARG TARGETARCH
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["immich-watcher/immich-watcher.csproj", "immich-watcher/"]
 
-RUN if [ "$TARGETPLATFORM" = "linux/arm64 " ] ; then DOTNET_TARGET=linux-arm64 ; else DOTNET_TARGET=linux-x64 ; fi \
-    && echo $DOTNET_TARGET > /tmp/rid
+#RUN if [ "$TARGETPLATFORM" = "linux/arm64 " ] ; then DOTNET_TARGET=linux-arm64 ; else DOTNET_TARGET=linux-x64 ; fi \
+#    && echo $DOTNET_TARGET > /tmp/rid
 
 RUN dotnet restore "immich-watcher/immich-watcher.csproj" -a $TARGETARCH 
 #-r $(cat /tmp/rid) /p:PublishReadyToRun=true
