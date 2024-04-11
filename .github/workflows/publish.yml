@@ -1,0 +1,31 @@
+name: Build, Publish 
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+  
+    runs-on: ubuntu-latest
+
+    steps:
+  
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+          
+      - id: hashtag
+        uses: prompt/actions-commit-hash@v3
+        
+      - name: Build, tag, and push image 
+        env:
+          REGISTRY: https://ghcr.io
+          SERVICE_NAME: siganberg/immich-watcher
+          IMAGE_TAG: ${{ steps.hashtag.outputs.short }}
+          REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+          REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+        run: |
+          echo "$REGISTRY_PASSWORD" | docker login --username $REGISTRY_USERNAME --password-stdin $REGISTRY
+          docker buildx create --use
+          docker buildx build -f src/immich-watcher/Dockerfile . --platform linux/amd64,linux/arm64 -t $SERVICE_NAME:$IMAGE_TAG --push --provenance=false        
