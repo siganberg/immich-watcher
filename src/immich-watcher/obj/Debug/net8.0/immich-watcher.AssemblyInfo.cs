@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("immich-watcher")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+64e9a56aed416686ceec15375622f238413e0bb8")]
 [assembly: System.Reflection.AssemblyProductAttribute("immich-watcher")]
 [assembly: System.Reflection.AssemblyTitleAttribute("immich-watcher")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

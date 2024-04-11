@@ -3,18 +3,15 @@ using CliWrap;
 using CliWrap.Buffered;
 using Serilog;
 
-var sourcePath = Environment.GetEnvironmentVariable("/data");
+
+var sourcePath = "/var/lib/data";
 var host =  Environment.GetEnvironmentVariable("IMMICH_HOST");
 var apiKey = Environment.GetEnvironmentVariable("IMMICH_API_KEY");
-
 var extensionFiles = new[] { ".jpg", ".mp4" };
 
-
-if (string.IsNullOrWhiteSpace(sourcePath))
-{
-    Log.Information("IMMICH_WATCHER_PATH is missing. Terminating");
-    return;
-}
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateLogger();
 
 if (!Directory.Exists(sourcePath))
 {

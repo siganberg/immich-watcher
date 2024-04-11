@@ -17,3 +17,4 @@
 /Users/francis.marasigan/projects/siganberg/immich-watcher/src/immich-watcher/obj/Debug/net8.0/immich-watcher.genruntimeconfig.cache
 /Users/francis.marasigan/projects/siganberg/immich-watcher/src/immich-watcher/obj/Debug/net8.0/ref/immich-watcher.dll
 /Users/francis.marasigan/projects/siganberg/immich-watcher/src/immich-watcher/bin/Debug/net8.0/CliWrap.dll
+/Users/francis.marasigan/projects/siganberg/immich-watcher/src/immich-watcher/obj/Debug/net8.0/immich-watcher.sourcelink.json

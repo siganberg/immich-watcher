@@ -2,7 +2,7 @@ name: immich-wather
 
 services:
   server:
-    image: ghcr.io/siganberg/immich-watcher:6f48f6c
+    image: ghcr.io/siganberg/immich-watcher:64e9a56
     container_name: immich_wather
     environment:
       - IMMICH_HOST=https://photos.marasigan.net
