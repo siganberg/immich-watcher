@@ -22,7 +22,7 @@ jobs:
         env:
           REGISTRY: ghcr.io
           SERVICE_NAME: siganberg/immich-watcher
-          IMAGE_TAG: 1.0.${GITHUB_RUN_NUMBER}
+          IMAGE_TAG: 1.0.${{ env.GITHUB_RUN_NUMBER }}
           REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
           REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
         run: |
