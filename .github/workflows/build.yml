@@ -30,13 +30,13 @@ jobs:
     - name: Build and Test
       run:  dotnet build src/  -c Release
       
-    #- name: Test Report
-    #  uses: dorny/test-reporter@v1
-    #  if: success() || failure()   
-    #  with:
-    #    name: Test Report     
-    #    path: "**/test-results.trx"   
-    #    reporter: dotnet-trx
+    - name: Test Report
+      uses: dorny/test-reporter@v1
+      if: success() || failure()   
+      with:
+        name: Test Report     
+        path: "**/test-results.trx"   
+        reporter: dotnet-trx
 
     #- name: Code Coverage Report
     #  uses: irongut/CodeCoverageSummary@v1.3.0
