@@ -28,7 +28,7 @@ jobs:
         dotnet-version: 8.0.x
         
     - name: Build and Test
-      run:  dotnet build src/  -c Release
+      run: ./build/build-test.sh
       
     - name: Test Report
       uses: dorny/test-reporter@v1
@@ -38,25 +38,25 @@ jobs:
         path: "**/test-results.trx"   
         reporter: dotnet-trx
 
-    #- name: Code Coverage Report
-    #  uses: irongut/CodeCoverageSummary@v1.3.0
-    #  with:
-    #    filename: test_results/**/coverage.cobertura.xml
-    #    badge: true
-    #    fail_below_min: true
-    #    format: markdown
-    #    hide_branch_rate: false
-    #    hide_complexity: true
-    #    indicators: true
-    #    output: both
-    #    thresholds: '60 80'
+    - name: Code Coverage Report
+      uses: irongut/CodeCoverageSummary@v1.3.0
+      with:
+        filename: test_results/**/coverage.cobertura.xml
+        badge: true
+        fail_below_min: true
+        format: markdown
+        hide_branch_rate: false
+        hide_complexity: true
+        indicators: true
+        output: both
+        thresholds: '60 80'
 
-    #- name: Add Coverage PR Comment
-    #  uses: marocchino/sticky-pull-request-comment@v2
-    #  if: github.event_name == 'pull_request'
-    #  with:
-    #    recreate: true
-    #    path: code-coverage-results.md
+    - name: Add Coverage PR Comment
+      uses: marocchino/sticky-pull-request-comment@v2
+      if: github.event_name == 'pull_request'
+      with:
+        recreate: true
+        path: code-coverage-results.md
 
-    #- name: Write to Job Summary
-    #  run: cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
+    - name: Write to Job Summary
+      run: cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
