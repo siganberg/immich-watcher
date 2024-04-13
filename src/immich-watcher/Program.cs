@@ -11,12 +11,9 @@ namespace Siganberg.ImmichWatcher;
 
 public class Program
 {
-    const string SourcePath = "/var/lib/data";
-    const string PendingName = "pending";
-    const string UploadedName = "uploaded";
-
-
-    // private static readonly ILogger Logger = LoggerFactory.Create(builder => { builder.AddConsole();} ).CreateLogger(nameof(Program));
+    private const string SourcePath = "/var/lib/data";
+    private const string PendingName = "pending";
+    private const string UploadedName = "uploaded";
 
     private static readonly ILogger Logger = new LoggerFactory()
         .AddSerilog(new LoggerConfiguration().WriteTo.Console(outputTemplate:"[{Timestamp:MM/dd/yyy HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}").CreateLogger())
@@ -25,13 +22,11 @@ public class Program
     [ExcludeFromCodeCoverage]
     public static void Main()
     {
-        var cts =  new CancellationTokenSource();
-        MainAsync(cts.Token).GetAwaiter().GetResult();
+        var cancellationTokenSource =  new CancellationTokenSource();
+        MainAsync(cancellationTokenSource.Token).GetAwaiter().GetResult();
     }
     public static async Task MainAsync(CancellationToken cancellationToken)
     {
-  
-
         CreateFolder(Path.Combine(SourcePath, PendingName));
         CreateFolder(Path.Combine(SourcePath, PendingName));
 
@@ -51,7 +46,6 @@ public class Program
     static async Task StartTransferringFilesAsync(string source, CancellationToken cancellationToken)
     {
         var extensionFiles =  new[] { ".jpg", ".mp4" };
-
         try
         {
             var files = Directory.EnumerateFiles(Path.Combine(source, PendingName), "*.*", SearchOption.AllDirectories)
@@ -70,7 +64,7 @@ public class Program
                     .WithStandardOutputPipe(PipeTarget.ToStringBuilder(outBuffer))
                     .ExecuteBufferedAsync(cancellationToken);
 
-                OutputMessage(outBuffer, file);
+                MapOutputMessage(outBuffer, file);
 
                 File.Move(file, file.Replace(PendingName, UploadedName), true);
             }
@@ -123,7 +117,7 @@ public class Program
             Directory.CreateDirectory(path);
     }
 
-    static void OutputMessage(StringBuilder stringBuilder, string s)
+    static void MapOutputMessage(StringBuilder stringBuilder, string s)
     {
         foreach (var l in stringBuilder.ToString().Split(Environment.NewLine))
         {

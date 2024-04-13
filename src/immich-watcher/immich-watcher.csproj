@@ -7,7 +7,6 @@
         <Nullable>enable</Nullable>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <RootNamespace>Siganberg.ImmichWatcher</RootNamespace>
-        <IsTestProject>false</IsTestProject>
     </PropertyGroup>
 
     <ItemGroup>

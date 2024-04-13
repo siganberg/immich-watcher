@@ -1,5 +1,6 @@
 using FluentAssertions;
 using FluentAssertions.Extensions;
+using Siganberg.ImmichWatcher.Tests.Integration.Helpers;
 
 namespace Siganberg.ImmichWatcher.Tests.Integration;
 
@@ -11,18 +12,17 @@ public class ProgramTests
         // Arrange
         Environment.SetEnvironmentVariable("IMMICH_HOST", "");
         Environment.SetEnvironmentVariable("IMMICH_API_KEY", "somevalue");
-        var outputWriter = new StringWriter();
-        // Console.SetOut(outputWriter);
-        // Console.SetError(outputWriter);      
-        var cts = new CancellationTokenSource();
-
+        using var consoleOutput = new ConsoleOutput();
+        
         // Act
+        var cts = new CancellationTokenSource();
         _ = Program.MainAsync(cts.Token);
 
         // Assert
-        var asyncTest = () =>   outputWriter.ToString().Should().Contain("ERR] IMMICH_HOST is missing");
+        var asyncTest = () => consoleOutput.GetOutput().Should().Contain("ERR] IMMICH_HOST is missing");
         asyncTest.Should().NotThrowAfter(2.Seconds(), 100.Milliseconds());
         await cts.CancelAsync();
+        
     }
     
     [Fact]
@@ -31,16 +31,14 @@ public class ProgramTests
         // Arrange
         Environment.SetEnvironmentVariable("IMMICH_HOST", "somevalue");
         Environment.SetEnvironmentVariable("IMMICH_API_KEY", "");
-        var outputWriter = new StringWriter();
-        // Console.SetOut(outputWriter);
-        // Console.SetError(outputWriter);  
-        var cts = new CancellationTokenSource();
+        using var consoleOutput = new ConsoleOutput();
 
         // Act
+        var cts = new CancellationTokenSource();
         _ = Program.MainAsync(cts.Token);
 
         // Assert
-        var asyncTest = () =>   outputWriter.ToString().Should().Contain("ERR] IMMICH_API_KEY is missing");
+        var asyncTest = () => consoleOutput.GetOutput().Should().Contain("ERR] IMMICH_API_KEY is missing");
         asyncTest.Should().NotThrowAfter(2.Seconds(), 100.Milliseconds());
         await cts.CancelAsync();
     }
