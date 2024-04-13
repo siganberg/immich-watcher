@@ -12,7 +12,13 @@ public class Program
     const string PendingName = "pending";
     const string UploadedName = "uploaded";
 
+
+    private static ILogger _logger  =new LoggerConfiguration()
+        .WriteTo.Console()
+        .CreateLogger();
+
     [ExcludeFromCodeCoverage]
+    
     public static void Main()
     {
         var cts =  new CancellationTokenSource();
@@ -20,15 +26,10 @@ public class Program
     }
     public static async Task MainAsync(CancellationToken cancellationToken)
     {
-
-        Log.Logger = new LoggerConfiguration()
-            .WriteTo.Console()
-            .CreateLogger();
-
         CreateFolder(Path.Combine(SourcePath, PendingName));
         CreateFolder(Path.Combine(SourcePath, PendingName));
 
-        Log.Information("Started monitoring source: {Source} folder.", SourcePath);
+        _logger.Information("Started monitoring source: {Source} folder.", SourcePath);
 
         var loginSuccess = await LoginToImmichAsync(cancellationToken);
 
@@ -70,7 +71,7 @@ public class Program
         }
         catch (Exception e)
         {
-            Log.Error(e, e.Message);
+            _logger.Error(e, e.Message);
         }
     }
 
@@ -83,13 +84,13 @@ public class Program
 
             if (string.IsNullOrWhiteSpace(host))
             {
-                Log.Error("IMMICH_HOST is missing. Please fixed the problem and restart the container.");
+                _logger.Error("IMMICH_HOST is missing. Please fixed the problem and restart the container.");
                 return false;
             }
 
             if (string.IsNullOrWhiteSpace(apiKey))
             {
-                Log.Error("IMMICH_API_KEY is missing. Please fixed the problem and restart the container.");
+                _logger.Error("IMMICH_API_KEY is missing. Please fixed the problem and restart the container.");
                 return false;
             }
 
@@ -98,13 +99,13 @@ public class Program
                 .ExecuteBufferedAsync(cancellationToken);
          
 
-            Log.Information("Login to Immich Server: {0} successful.", host);
+            _logger.Information("Login to Immich Server: {0} successful.", host);
 
             return true;
         }
         catch (Exception e)
         {
-            Log.Error(e, "Error trying to login to Immich Server. Please correct the error and restart the container.");
+            _logger.Error(e, "Error trying to login to Immich Server. Please correct the error and restart the container.");
         }
 
         return false;
@@ -121,9 +122,9 @@ public class Program
         foreach (var l in stringBuilder.ToString().Split(Environment.NewLine))
         {
             if (l.Contains("1 duplicate"))
-                Log.Information("File {0} already exist. Skipping.", s);
+                _logger.Information("File {0} already exist. Skipping.", s);
             if (l.Contains("Successfully"))
-                Log.Information(l.Replace("1", s));
+                _logger.Information(l.Replace("1", s));
         }
     }
 }
