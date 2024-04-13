@@ -2,8 +2,10 @@
 using System.Text;
 using CliWrap;
 using CliWrap.Buffered;
-//using Serilog;
 using Microsoft.Extensions.Logging;
+using Serilog;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
+
 
 namespace Siganberg.ImmichWatcher;
 
@@ -14,7 +16,11 @@ public class Program
     const string UploadedName = "uploaded";
 
 
-    private static ILogger _logger = LoggerFactory.Create(builder => { builder.AddConsole();} ).CreateLogger(nameof(Program));
+    // private static readonly ILogger Logger = LoggerFactory.Create(builder => { builder.AddConsole();} ).CreateLogger(nameof(Program));
+
+    private static readonly ILogger Logger = new LoggerFactory()
+        .AddSerilog(new LoggerConfiguration().WriteTo.Console(outputTemplate:"[{Timestamp:MM/dd/yyy HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}").CreateLogger())
+        .CreateLogger<Program>();
     
     [ExcludeFromCodeCoverage]
     public static void Main()
@@ -24,14 +30,12 @@ public class Program
     }
     public static async Task MainAsync(CancellationToken cancellationToken)
     {
-        // Log.Logger = new LoggerConfiguration()
-        //     .WriteTo.Console(outputTemplate:"[{Timestamp:MM/dd/yyy HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}")
-        //     .CreateLogger();
+  
 
         CreateFolder(Path.Combine(SourcePath, PendingName));
         CreateFolder(Path.Combine(SourcePath, PendingName));
 
-        _logger.LogInformation("Started monitoring source: {Source} folder.", SourcePath);
+        Logger.LogInformation("Started monitoring source: {Source} folder.", SourcePath);
 
         var loginSuccess = await LoginToImmichAsync(cancellationToken);
 
@@ -73,7 +77,7 @@ public class Program
         }
         catch (Exception e)
         {
-            _logger.LogError(e, e.Message);
+            Logger.LogError(e, e.Message);
         }
     }
 
@@ -86,13 +90,13 @@ public class Program
 
             if (string.IsNullOrWhiteSpace(host))
             {
-                _logger.LogError("IMMICH_HOST is missing. Please fixed the problem and restart the container.");
+                Logger.LogError("IMMICH_HOST is missing. Please fixed the problem and restart the container.");
                 return false;
             }
 
             if (string.IsNullOrWhiteSpace(apiKey))
             {
-                _logger.LogError("IMMICH_API_KEY is missing. Please fixed the problem and restart the container.");
+                Logger.LogError("IMMICH_API_KEY is missing. Please fixed the problem and restart the container.");
                 return false;
             }
 
@@ -101,13 +105,13 @@ public class Program
                 .ExecuteBufferedAsync(cancellationToken);
          
 
-            _logger.LogInformation("Login to Immich Server: {0} successful.", host);
+            Logger.LogInformation("Login to Immich Server: {0} successful.", host);
 
             return true;
         }
         catch (Exception e)
         {
-            _logger.LogInformation(e, "Error trying to login to Immich Server. Please correct the error and restart the container.");
+            Logger.LogInformation(e, "Error trying to login to Immich Server. Please correct the error and restart the container.");
         }
 
         return false;
@@ -124,9 +128,9 @@ public class Program
         foreach (var l in stringBuilder.ToString().Split(Environment.NewLine))
         {
             if (l.Contains("1 duplicate"))
-                _logger.LogInformation("File {0} already exist. Skipping.", s);
+                Logger.LogInformation("File {0} already exist. Skipping.", s);
             if (l.Contains("Successfully"))
-                _logger.LogInformation(l.Replace("1", s));
+                Logger.LogInformation(l.Replace("1", s));
         }
     }
 }
