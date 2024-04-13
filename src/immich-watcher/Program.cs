@@ -2,7 +2,8 @@
 using System.Text;
 using CliWrap;
 using CliWrap.Buffered;
-using Serilog;
+//using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace Siganberg.ImmichWatcher;
 
@@ -13,12 +14,9 @@ public class Program
     const string UploadedName = "uploaded";
 
 
-    private static ILogger _logger  =new LoggerConfiguration()
-        .WriteTo.Console()
-        .CreateLogger();
-
-    [ExcludeFromCodeCoverage]
+    private static ILogger _logger = LoggerFactory.Create(builder => { builder.AddConsole();} ).CreateLogger(nameof(Program));
     
+    [ExcludeFromCodeCoverage]
     public static void Main()
     {
         var cts =  new CancellationTokenSource();
@@ -26,10 +24,14 @@ public class Program
     }
     public static async Task MainAsync(CancellationToken cancellationToken)
     {
+        // Log.Logger = new LoggerConfiguration()
+        //     .WriteTo.Console(outputTemplate:"[{Timestamp:MM/dd/yyy HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}")
+        //     .CreateLogger();
+
         CreateFolder(Path.Combine(SourcePath, PendingName));
         CreateFolder(Path.Combine(SourcePath, PendingName));
 
-        _logger.Information("Started monitoring source: {Source} folder.", SourcePath);
+        _logger.LogInformation("Started monitoring source: {Source} folder.", SourcePath);
 
         var loginSuccess = await LoginToImmichAsync(cancellationToken);
 
@@ -71,7 +73,7 @@ public class Program
         }
         catch (Exception e)
         {
-            _logger.Error(e, e.Message);
+            _logger.LogError(e, e.Message);
         }
     }
 
@@ -84,13 +86,13 @@ public class Program
 
             if (string.IsNullOrWhiteSpace(host))
             {
-                _logger.Error("IMMICH_HOST is missing. Please fixed the problem and restart the container.");
+                _logger.LogError("IMMICH_HOST is missing. Please fixed the problem and restart the container.");
                 return false;
             }
 
             if (string.IsNullOrWhiteSpace(apiKey))
             {
-                _logger.Error("IMMICH_API_KEY is missing. Please fixed the problem and restart the container.");
+                _logger.LogError("IMMICH_API_KEY is missing. Please fixed the problem and restart the container.");
                 return false;
             }
 
@@ -99,13 +101,13 @@ public class Program
                 .ExecuteBufferedAsync(cancellationToken);
          
 
-            _logger.Information("Login to Immich Server: {0} successful.", host);
+            _logger.LogInformation("Login to Immich Server: {0} successful.", host);
 
             return true;
         }
         catch (Exception e)
         {
-            _logger.Error(e, "Error trying to login to Immich Server. Please correct the error and restart the container.");
+            _logger.LogInformation(e, "Error trying to login to Immich Server. Please correct the error and restart the container.");
         }
 
         return false;
@@ -122,9 +124,9 @@ public class Program
         foreach (var l in stringBuilder.ToString().Split(Environment.NewLine))
         {
             if (l.Contains("1 duplicate"))
-                _logger.Information("File {0} already exist. Skipping.", s);
+                _logger.LogInformation("File {0} already exist. Skipping.", s);
             if (l.Contains("Successfully"))
-                _logger.Information(l.Replace("1", s));
+                _logger.LogInformation(l.Replace("1", s));
         }
     }
 }
