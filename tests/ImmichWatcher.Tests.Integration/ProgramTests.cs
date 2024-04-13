@@ -12,7 +12,8 @@ public class ProgramTests
         Environment.SetEnvironmentVariable("IMMICH_HOST", "");
         Environment.SetEnvironmentVariable("IMMICH_API_KEY", "somevalue");
         var outputWriter = new StringWriter();
-        Console.SetOut(outputWriter);
+        // Console.SetOut(outputWriter);
+        // Console.SetError(outputWriter);      
         var cts = new CancellationTokenSource();
 
         // Act
@@ -31,7 +32,8 @@ public class ProgramTests
         Environment.SetEnvironmentVariable("IMMICH_HOST", "somevalue");
         Environment.SetEnvironmentVariable("IMMICH_API_KEY", "");
         var outputWriter = new StringWriter();
-        Console.SetOut(outputWriter);
+        // Console.SetOut(outputWriter);
+        // Console.SetError(outputWriter);  
         var cts = new CancellationTokenSource();
 
         // Act
