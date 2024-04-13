@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <OutputType>Exe</OutputType>
+    <PropertyGroup>    
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
@@ -11,10 +10,10 @@
 
     <ItemGroup>
         <PackageReference Include="CliWrap" Version="3.6.6" />
-        <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.0-preview.3.24172.9" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.0-preview.3.24172.9" />
-        <PackageReference Include="Serilog.Extensions.Logging" Version="8.0.1-dev-10389" />
-        <PackageReference Include="Serilog.Sinks.Console" Version="5.1.0-dev-00943" />
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
+        <PackageReference Include="Serilog.Extensions.Logging" Version="8.0.0" />
+        <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
     </ItemGroup>
 
     <ItemGroup>
