@@ -13,6 +13,7 @@ public class ConsoleOutput : IDisposable
     }
     public string GetOutput()
     {
+        _stringWriter.FlushAsync();
         var result = _stringWriter.ToString();
         _originalOutput.Write(result);
         return result;
