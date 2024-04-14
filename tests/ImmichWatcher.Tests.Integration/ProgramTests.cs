@@ -7,10 +7,10 @@ namespace Siganberg.ImmichWatcher.Tests.Integration;
 public class ProgramTests
 {
     [Fact]
-    public async Task GivenMissingImmichHostEnv_WhenSomethingStart_ThenShouldSeeErrorMissingImmichHost()
+    public async Task GivenMissingImmichHostEnv_WhenRun_ThenShouldSeeErrorMissingImmichHost()
     {
         // Arrange
-        Environment.SetEnvironmentVariable("IMMICH_HOST", "");
+        Environment.SetEnvironmentVariable("IMMICH_INSTANCE_URL", "");
         Environment.SetEnvironmentVariable("IMMICH_API_KEY", "somevalue");
         using var consoleOutput = new ConsoleOutput();
         
@@ -19,17 +19,17 @@ public class ProgramTests
         _ = Program.MainAsync(cts.Token);
 
         // Assert
-        var asyncTest = () => consoleOutput.GetOutput().Should().Contain("ERR] IMMICH_HOST is missing");
+        var asyncTest = () => consoleOutput.GetOutput().Should().Contain("ERR] IMMICH_INSTANCE_URL is missing");
         asyncTest.Should().NotThrowAfter(2.Seconds(), 100.Milliseconds());
         await cts.CancelAsync();
         
     }
     
     [Fact]
-    public async Task GivenMissingAouJet_WhenSomethingStart_ThenShouldSeeErrorApiKey()
+    public async Task GivenMissingApiKey_WhenRun_ThenShouldSeeErrorApiKey()
     {
         // Arrange
-        Environment.SetEnvironmentVariable("IMMICH_HOST", "somevalue");
+        Environment.SetEnvironmentVariable("IMMICH_INSTANCE_URL", "somevalue");
         Environment.SetEnvironmentVariable("IMMICH_API_KEY", "");
         using var consoleOutput = new ConsoleOutput();
 
@@ -42,6 +42,25 @@ public class ProgramTests
         asyncTest.Should().NotThrowAfter(2.Seconds(), 100.Milliseconds());
         await cts.CancelAsync();
     }
+    
+    [Fact]
+    public async Task GivenJpegExist_WhenRun_ThenFileShouldBeUploaded()
+    {
+        // Arrange
+        var workingDirectory = Environment.CurrentDirectory;
+        var uploadPath = Path.Combine(Directory.GetParent(workingDirectory)!.Parent!.Parent!.FullName) + "/TestData";
+        Environment.SetEnvironmentVariable("IMMICH_UPLOAD_PATH",  uploadPath);
+        Environment.SetEnvironmentVariable("IMMICH_INSTANCE_URL", "http://192.168.68.20:2283");
+        Environment.SetEnvironmentVariable("IMMICH_API_KEY", "b3VryThvjEbD9vvAKPvPUPYZ4SiszC3Of1RAgABC5kI");
+        using var consoleOutput = new ConsoleOutput();
+
+        // Act
+        var cancellationTokenSource = new CancellationTokenSource();
+        _ = Program.MainAsync(cancellationTokenSource.Token);
+
+        // Assert
+        var asyncTest = () => consoleOutput.GetOutput().Should().Contain("ERR] IMMICH_API_KEY is missing");
+        asyncTest.Should().NotThrowAfter(200.Seconds(), 100.Milliseconds());
+        await cancellationTokenSource.CancelAsync();
+    }
 }
-
-

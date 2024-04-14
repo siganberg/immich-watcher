@@ -3,7 +3,7 @@
 
 | ENV Variables           | Required | Note                                                                                                                                                                          |  
 |-------------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-|     IMMICH_HOST   | Yes      |  The hostname, IP address, or the DNS of your Immich server. <br>examples: <br>`https://immich.myserver.com` <br/> `http://192.168.1.2:2283`<br/>`http://myserver.local:2283` |
+|     IMMICH_INSTANCE_URL   | Yes      |  The hostname, IP address, or the DNS of your Immich server. <br>examples: <br>`https://immich.myserver.com` <br/> `http://192.168.1.2:2283`<br/>`http://myserver.local:2283` |
 |     IMMICH_API_KEY    | Yes      | API Key. You can generate this on the from  `http://yourserver/user-settings?isOpen=api-keys`                                                                                 
                                     
 
@@ -24,7 +24,7 @@ services:
     image: ghcr.io/siganberg/immich-watcher:1.0.16
     container_name: immich_wather
     environment:
-      - IMMICH_HOST=${IMMICH_HOST}
+      - IMMICH_INSTANCE_URL=${IMMICH_INSTANCE_URL}
       - IMMICH_API_KEY=${IMMICH_API_KEY}
     restart: always
     volumes:

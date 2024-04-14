@@ -9,15 +9,15 @@ using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Siganberg.ImmichWatcher;
 
-public class Program
+public static class Program
 {
-    private const string SourcePath = "/var/lib/data";
+    private const string DefaultSourcePath = "/var/lib/data";
     private const string PendingName = "pending";
     private const string UploadedName = "uploaded";
 
     private static readonly ILogger Logger = new LoggerFactory()
         .AddSerilog(new LoggerConfiguration().WriteTo.Console(outputTemplate:"[{Timestamp:MM/dd/yyy HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}").CreateLogger())
-        .CreateLogger<Program>();
+        .CreateLogger("Program");
     
     [ExcludeFromCodeCoverage]
     public static void Main()
@@ -27,10 +27,15 @@ public class Program
     }
     public static async Task MainAsync(CancellationToken cancellationToken)
     {
-        CreateFolder(Path.Combine(SourcePath, PendingName));
-        CreateFolder(Path.Combine(SourcePath, PendingName));
+        var sourcePath = Environment.GetEnvironmentVariable("IMMICH_UPLOAD_PATH");
+        if (string.IsNullOrWhiteSpace(sourcePath) || !Directory.Exists(sourcePath))
+            sourcePath = DefaultSourcePath;
+        
+        
+        CreateFolder(Path.Combine(sourcePath, PendingName));
+        CreateFolder(Path.Combine(sourcePath, PendingName));
 
-        Logger.LogInformation("Started monitoring source: {Source} folder.", SourcePath);
+        Logger.LogInformation("Started monitoring source: {Source} folder.", sourcePath);
 
         var loginSuccess = await LoginToImmichAsync(cancellationToken);
 
@@ -38,7 +43,7 @@ public class Program
         {
             if (loginSuccess)
             {
-                await StartTransferringFilesAsync(SourcePath, cancellationToken);
+                await StartTransferringFilesAsync(sourcePath, cancellationToken);
             }
             await Task.Delay(1000, cancellationToken);
         }
@@ -79,12 +84,12 @@ public class Program
     {
         try
         {
-            var host = Environment.GetEnvironmentVariable("IMMICH_HOST");
-            var apiKey = Environment.GetEnvironmentVariable("IMMICH_API_KEY");
+            var hostUrl = "http://localhost:3001"; //Environment.GetEnvironmentVariable("IMMICH_INSTANCE_URL");
+            var apiKey = "79KlkgsIC30iQu1jmTCyZaJ7sWQ1OTJ439BUI5nyaUE"; //Environment.GetEnvironmentVariable("IMMICH_API_KEY");
 
-            if (string.IsNullOrWhiteSpace(host))
+            if (string.IsNullOrWhiteSpace(hostUrl))
             {
-                Logger.LogError("IMMICH_HOST is missing. Please fixed the problem and restart the container.");
+                Logger.LogError("IMMICH_INSTANCE_URL is missing. Please fixed the problem and restart the container.");
                 return false;
             }
 
@@ -95,11 +100,13 @@ public class Program
             }
 
             _ = await Cli.Wrap("immich")
-                .WithArguments($"login {host}/api {apiKey}")
+                .WithArguments($"login {hostUrl}/api {apiKey}")
+                .WithTargetFile(Directory.GetParent(Environment.CurrentDirectory)!.Parent!.Parent!.FullName)
                 .ExecuteBufferedAsync(cancellationToken);
+                
          
 
-            Logger.LogInformation("Login to Immich Server: {0} successful.", host);
+            Logger.LogInformation("Login to Immich Server: {0} successful.", hostUrl);
 
             return true;
         }
