@@ -40,3 +40,4 @@ Desktop.ini
 *.pdb
 *.trx
 **/test_results/**
+**/pending

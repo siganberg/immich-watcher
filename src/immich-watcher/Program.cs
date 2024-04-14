@@ -101,7 +101,7 @@ public static class Program
 
             _ = await Cli.Wrap("immich")
                 .WithArguments($"login {hostUrl}/api {apiKey}")
-                .WithTargetFile(Directory.GetParent(Environment.CurrentDirectory)!.Parent!.Parent!.FullName)
+                .WithValidation(CommandResultValidation.None)
                 .ExecuteBufferedAsync(cancellationToken);
                 
          
