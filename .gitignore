@@ -38,3 +38,6 @@ Desktop.ini
 **/publish
 *.dll
 *.pdb
+*.trx
+**/test_results/**
+**/pending

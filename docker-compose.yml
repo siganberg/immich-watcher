@@ -1,11 +1,11 @@
-name: immich-wather
+name: immich-watcher
 
 services:
   server:
-    image: immich-watcher:dev 
+    image: immich-watcher:1.0
     container_name: immich_wather
     environment:
-      - IMMICH_HOST=${IMMICH_HOST}
+      - IMMICH_INSTANCE_URL=${IMMICH_INSTANCE_URL}
       - IMMICH_API_KEY=${IMMICH_API_KEY}
     restart: always
     volumes:
