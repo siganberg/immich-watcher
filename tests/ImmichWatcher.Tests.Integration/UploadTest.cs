@@ -1,3 +1,5 @@
+using FluentAssertions;
+using FluentAssertions.Extensions;
 using Siganberg.ImmichWatcher.Tests.Integration.Helpers;
 
 namespace Siganberg.ImmichWatcher.Tests.Integration;
@@ -6,13 +8,12 @@ namespace Siganberg.ImmichWatcher.Tests.Integration;
 public class UploadTest
 {
     [Fact]
-    public void GivenMissingApiKey_WhenRun_ThenShouldSeeErrorApiKey()
+    public async Task GivenPendingFileExist_WhenRun_ThenShouldSeeErrorApiKey()
     {
         // Arrange
         using var consoleOutput = new ConsoleOutput();
 
         // Act
-      
         var testDataPath = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory())!.Parent!.Parent!.FullName, "TestData");
         var pendingPath = Path.Combine(testDataPath, "pending");
         var di = new DirectoryInfo(Path.Combine(pendingPath));
@@ -21,7 +22,7 @@ public class UploadTest
         File.Copy(Path.Combine(testDataPath, "RiskyRiders.jpg"), Path.Combine(pendingPath, "RiskyRiders.jpg"));
         
         // Assert
-        Thread.Sleep(20000);
-  
+        var asyncTest = () => consoleOutput.GetOutput().Should().Contain("uploaded successfully");
+        asyncTest.Should().NotThrowAfter(5.Seconds(), 100.Milliseconds());
     }
 }

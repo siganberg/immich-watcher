@@ -1,10 +1,16 @@
 name: immich_test
 
+volumes:
+  upload:
+
 services:
   immich-server:
     container_name: immich_server
     image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
     command: ['start.sh', 'immich']
+    volumes:
+      - upload:/usr/src/app/upload
+      - /etc/localtime:/etc/localtime:ro
     env_file:
       - .env
     ports:
@@ -17,7 +23,9 @@ services:
   immich-microservices:
     container_name: immich_microservices
     image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
-    command: ['start.sh', 'microservices']   
+    command: ['start.sh', 'microservices']
+    volumes:
+      - upload:/usr/src/app/upload
     env_file:
       - .env
     depends_on:

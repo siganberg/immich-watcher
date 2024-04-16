@@ -1,4 +1,5 @@
 using Flurl.Http;
+using Polly;
 using Siganberg.ImmichWatcher.Tests.Integration.Models;
 
 namespace Siganberg.ImmichWatcher.Tests.Integration.Helpers;
@@ -43,11 +44,16 @@ internal class ImmichApiManager
             });
     }
 
-    private Task<ServerInfoConfigResponse> GetServerInfoConfigAsync()
+    private async Task<ServerInfoConfigResponse> GetServerInfoConfigAsync()
     {
-        return new FlurlClient(_httpProxymanLocal)
-            .Request("/api/server-info/config")
-            .GetJsonAsync<ServerInfoConfigResponse>();
+        var request = new FlurlClient(_httpProxymanLocal)
+            .Request("/api/server-info/config");
+        
+        var result = await Policy.Handle<FlurlHttpException>()
+            .WaitAndRetryAsync(5, _ => TimeSpan.FromSeconds(1))
+            .ExecuteAsync(() => request.GetJsonAsync<ServerInfoConfigResponse>());
+        
+        return result;
     }
 
     private async Task GetOrCreateApiKey()
