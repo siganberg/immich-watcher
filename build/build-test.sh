@@ -1,8 +1,8 @@
 rm -rf test_results
 
-dotnet build src/ -c Release
+dotnet build -c Release
 
-dotnet test src/ \
+dotnet test  \
   --filter exclude!="true" \
   --no-build  \
   --logger:"trx;LogFileName=test-results.trx" \

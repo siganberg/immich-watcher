@@ -7,10 +7,18 @@ namespace Siganberg.ImmichWatcher.Tests.Integration;
 [Collection(nameof(TestServerCollection))]
 public class UploadTest
 {
+    private readonly TestServer _testServer;
+
+    public UploadTest(TestServer testServer)
+    {
+        _testServer = testServer;
+    }
+
     [Fact]
     public async Task GivenPendingFileExist_WhenRun_ThenShouldSeeErrorApiKey()
     {
         // Arrange
+        await _testServer.ImmichApiManager.ResetAssetAsync();
         using var consoleOutput = new ConsoleOutput();
 
         // Act

@@ -4,15 +4,15 @@ using Siganberg.ImmichWatcher.Tests.Integration.Models;
 
 namespace Siganberg.ImmichWatcher.Tests.Integration.Helpers;
 
-internal class ImmichApiManager
+public class ImmichApiManager
 {
     private readonly string _testPassword;
     private readonly string _testEmail;
     private readonly string _httpProxymanLocal;
     
     private ServerInfoConfigResponse _serverInfoConfig = default!;
-    public LoginInfoResponse LoginInfo = default!;
-    public CreateApiKeyResponse ApiKey = default!;
+    private LoginInfoResponse _loginInfo = default!;
+    internal CreateApiKeyResponse ApiKey = default!;
 
     public ImmichApiManager(string httpAddress, string username, string password)
     {
@@ -62,7 +62,7 @@ internal class ImmichApiManager
 
         ApiKey = await new FlurlClient(_httpProxymanLocal)
             .Request("/api/api-key")
-            .WithAuthentication(LoginInfo.AccessToken)
+            .WithAuthentication(_loginInfo.AccessToken)
             .PostJsonAsync(new
             {
                 name = "IntegrationTest API Key"
@@ -74,7 +74,7 @@ internal class ImmichApiManager
     {
         var apiKeys = await new FlurlClient(_httpProxymanLocal)
             .Request("/api/api-key")
-            .WithAuthentication(LoginInfo.AccessToken)
+            .WithAuthentication(_loginInfo.AccessToken)
             .GetJsonAsync<GetApiKeyResponse[]>();
 
         foreach (var apiKey in apiKeys)
@@ -85,7 +85,7 @@ internal class ImmichApiManager
     {
         _ = new FlurlClient(_httpProxymanLocal)
             .Request($"/api/api-key/{apiKey.Id}")
-            .WithAuthentication(LoginInfo.AccessToken)
+            .WithAuthentication(_loginInfo.AccessToken)
             .DeleteAsync()
             .GetAwaiter()
             .GetResult();
@@ -97,13 +97,13 @@ internal class ImmichApiManager
 
         await new FlurlClient(_httpProxymanLocal)
             .Request("/api/server-info/admin-onboarding")
-            .WithAuthentication(LoginInfo.AccessToken)
+            .WithAuthentication(_loginInfo.AccessToken)
             .PostAsync();
     }
 
     private async Task LoginAsync()
     {
-        LoginInfo = await new FlurlClient(_httpProxymanLocal)
+        _loginInfo = await new FlurlClient(_httpProxymanLocal)
             .Request("/api/auth/login")
             .PostJsonAsync(new
             {
@@ -114,5 +114,22 @@ internal class ImmichApiManager
         if (_serverInfoConfig.IsOnboarded) return;
         
         await ServerOnboardedAsync();
+    }
+
+    public async Task ResetAssetAsync()
+    {
+        var ids = await new FlurlClient(_httpProxymanLocal)
+            .Request("/api/asset")
+            .WithAuthentication(_loginInfo.AccessToken)
+            .GetJsonAsync<Asset[]>();
+        
+        await new FlurlClient(_httpProxymanLocal)
+            .Request("/api/asset")
+            .WithAuthentication(_loginInfo.AccessToken)
+            .SendJsonAsync(HttpMethod.Delete, new
+            {
+                force = true, 
+                ids = ids.Select(a => a.Id).ToArray()
+            });
     }
 }
